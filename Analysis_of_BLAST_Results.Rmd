@@ -27,6 +27,7 @@ Further computational steps were used to analyze the data. The data was download
 # Results
 
 ```{r load-libraries, message = FALSE}
+
 # Be sure to install these packages before running this script
 # They can be installed either with the install.packages() function
 # or with the 'Packages' pane in RStudio
@@ -134,7 +135,7 @@ joined_blast_data_metadata <- metadata_in %>%
 joined_blast_data_metadata %>%
   filter(sscinames == "unidentified bacterium" ) %>%
   ggplot(aes(x = host_subject_id_s )) +
-    geom_bar() + 
+    geom_bar() +
     ggtitle("Unidentified bacterium") +
     xlab("host_subject_id_s")
 ```
@@ -144,7 +145,7 @@ Fig 1:This bar plot looks at which samples had the most unidentified bacterium
 joined_blast_data_metadata %>%
   filter(sscinames == "Bartonella washoensis" ) %>%
   ggplot(aes(x = host_subject_id_s )) +
-    geom_bar() + 
+    geom_bar() +
     ggtitle("Bartonella washoensis") +
     xlab("host_subject_id_s")
 ```
@@ -156,17 +157,17 @@ Fig 2:This bar plot looks at which samples had the most occurences of *Bartonell
 ```{r visual data3}
 joined_blast_data_metadata %>%
   filter(host_subject_id_s == "M2", ) %>%
-  ggplot(aes(x= sscinames, y = sample_type_s, color= pident )) +
-    geom_point() + 
-    ggtitle("Subject M2") 
+  ggplot(aes(x = sscinames, y = sample_type_s, color = pident )) +
+    geom_point() +
+    ggtitle("Subject M2")
 ```
 
 Fig 3: This figure shows the difference in presence of bacterium in the palm and mouse of individual M2
 ```{r visual data4}
 joined_blast_data_metadata %>%
   filter(host_subject_id_s == "F7", ) %>%
-  ggplot(aes(x= sscinames, y = sample_type_s, color= pident )) +
-    geom_point() + 
+  ggplot(aes(x = sscinames, y = sample_type_s, color = pident )) +
+    geom_point() +
     ggtitle("Subject F7")
 ```
 
