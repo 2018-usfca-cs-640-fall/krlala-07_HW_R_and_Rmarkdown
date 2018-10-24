@@ -1,7 +1,8 @@
 ---
 title: "Analysis of BLAST Results"
-author: "Don Francisco"
-date: "October 21, 2018"
+author: "Karan Lala"
+date: "October 23, 2018"
+E-mail: "krlala@usfca.edu"
 output: github_document
 ---
 
@@ -126,7 +127,7 @@ joined_blast_data_metadata <- metadata_in %>%
 ```
 
 
-```{r histograms}
+```{r visual data1}
 # Here we're using the dplyr piping syntax to select a subset of rows matching a
 # criteria we specify (using the filter) function, and then pull out a column
 # from the data to make a histogram.
@@ -134,41 +135,45 @@ joined_blast_data_metadata %>%
   filter(sscinames == "unidentified bacterium" ) %>%
   ggplot(aes(x = host_subject_id_s )) +
     geom_bar() + 
-    ggtitle("Percent Identity") +
-    xlab("sscinames")
+    ggtitle("Unidentified bacterium") +
+    xlab("host_subject_id_s")
+```
 
+Fig 1:This bar plot looks at which samples had the most unidentified bacterium
+```{r visual data2}
 joined_blast_data_metadata %>%
   filter(sscinames == "Bartonella washoensis" ) %>%
   ggplot(aes(x = host_subject_id_s )) +
     geom_bar() + 
-    ggtitle("Percent Identity") +
-    xlab("sscinames")
+    ggtitle("Bartonella washoensis") +
+    xlab("host_subject_id_s")
+```
 
+Fig 2:This bar plot looks at which samples had the most occurences of *Bartonella washoensis*
+
+## Based off the first two plots, two subject id's were picked to have a closer look at.
+### Note that in the below graphs, you cannot distinguish individual species names, which is fine.
+```{r visual data3}
 joined_blast_data_metadata %>%
   filter(host_subject_id_s == "M2", ) %>%
   ggplot(aes(x= sscinames, y = sample_type_s, color= pident )) +
     geom_point() + 
-    ggtitle("Percent Identity") +
-    xlab("sscinames")
+    ggtitle("Subject M2") 
+```
 
-
+Fig 3: This figure shows the difference in presence of bacterium in the palm and mouse of individual M2
+```{r visual data4}
 joined_blast_data_metadata %>%
   filter(host_subject_id_s == "F7", ) %>%
   ggplot(aes(x= sscinames, y = sample_type_s, color= pident )) +
     geom_point() + 
-    ggtitle("Percent Identity") +
-    xlab("sscinames")
+    ggtitle("Subject F7")
 ```
-Don't forget to report what your figures show in words, here in the Results section.
 
-```{r summary-table}
-# Finally, we'd like to be able to make a summary table of the counts of
-# sequences for each subject for both sample types. To do that we can use the
-# table() function. We add the kable() function as well (from the tidyr package)
-# in order to format the table nicely when the document is knitted
-kable(table(joined_blast_data_metadata$host_subject_id_s,
-            joined_blast_data_metadata$sample_type_s))
-```
+Fig 4: This figure shows the difference in presence of bacterium in the palm and mouse of individual M2
+
+
+
 
 # Discussion
 
