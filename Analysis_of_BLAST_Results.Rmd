@@ -170,12 +170,20 @@ joined_blast_data_metadata %>%
     ggtitle("Subject F7")
 ```
 
-Fig 4: This figure shows the difference in presence of bacterium in the palm and mouse of individual M2
+Fig 4: This figure shows the difference in presence of bacterium in the palm and mouse of individual F7
 
 
 
 
 # Discussion
 
-Add 2-3 paragraphs here interpreting your results and considering future directions one might take in analyzing these data.
+- In the data visualizations above, it seems like there aren't a lot of bacterium that were left unidentified, and those that were, existed only in certain samples. Is there something about the environment of those individuals, that they picked up such bacterium?
+Secondly, we see that *Bartonella washoensis*, which I thought was abundant across all samples after computational analysis with bash, was concentrated in only a few cases.
+
+- After picking two individuals, M2 and F7, which showed presence on both graph, the next two graphs look at the presence of bacteria on the hands and mouse of these individuals.
+Interestingly, for subject M2, we can see that his right palm shows presence of almost all sorts of bacterium identified, while the corresponding mouse is nowhere near as enriched.Perhaps some bacterial species survive better on the mouse, and some simply survive only around organic matter?
+Individual F7 shows more of an expected distribution, with some bacterium specific only to the mouse or hand, some and some common on both surfaces.
+The percent identity distribution doesn't reveal anything special.
+Further, it may be a good idea to compare which bacteria thrive on mouse and human palms across this dataset, and how varied the bacterial community across such comparisons is.
+
 
