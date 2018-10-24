@@ -1,31 +1,30 @@
----
-title: "Analysis of BLAST Results"
-author: "Don Francisco"
-date: "October 21, 2018"
-output: github_document
----
+Analysis of BLAST Results
+================
+Don Francisco
+October 21, 2018
 
-# Introduction
+Introduction
+============
 
-Bacteria are ubiquitous, and the human body is no exception. Humans house huge swathes of bacteria inside and on them. These bacteria play very important roles in human health, especially in areas like the face and gut. The human microbiome project by the NIH provided a lot of information with regards to these microbial communities, including the common species found and sequences as well.
+Add 1-2 paragraphs here.
 
-In the Fierer et al study, they attempt to analyse whether communities of microbes found on a persons hands can be matched to the computer mouse they utilised. Skin bacterial communities are personalized, and there is evidence that the interindividual variability among such communities is enough to identify the source. The study shows that microbial communities from such surfaces can be used to distinguish individuals to some degree, even if those objects have been left untouched for up to 2 weeks at room temperature, and hence serve as a method of forensic analysis.
+Methods
+=======
 
-# Methods
+Sample origin and sequencing
+----------------------------
 
-Bacterial communities found on individuals fingers were compared with the communities obtained from keys on 3 different keyboards. The samples collected from the surfaces were then comapred with a database of 250 individuals, to macth with the correct individual that had touched the surface in question. Individaulkeys and the fingertip oof the owner were swabbed, and these swabs were stored at -80'C before extracting DNA.
+Add about a paragraph here.
 
-## Sample origin and sequencing
+Computational
+-------------
 
-Samples came from computer keys, mice, and humanhands and fingertips. DNA collected using “MO BIO PowerSoil” DNA Isolation kit, 16S rRNA genes camplified by PCR. PyroSequencing was then carried out by 454 Life Sciences Genome Sequencer FLX instrument and sequences with less than 300 bp are not included.
+And another paragraph or two here.
 
-## Computational
+Results
+=======
 
-Further computational steps were used to analyze the data. The data was downloaded from NCBI, and then its quality was assessed by generating QC reports. The Trimmomatic tool was then used to 'trim' sequences, eliminating low quality reads and "N" in the sequence reads. Finally, these trimmed results were converted to the fasta format and then were used to BLAST and find the top matches for the sequences, all using a bash script.
-
-# Results
-
-```{r load-libraries, message = FALSE}
+``` r
 # Be sure to install these packages before running this script
 # They can be installed either with the install.packages() function
 # or with the 'Packages' pane in RStudio
@@ -37,7 +36,7 @@ library("knitr")
 library("ggplot2")
 ```
 
-```{r make-read-in-data-function}
+``` r
 # Output format from BLAST is as detailed on:
 # https://www.ncbi.nlm.nih.gov/books/NBK279675/
 # In this case, we used: '10 sscinames std'
@@ -83,7 +82,7 @@ read_blast_output <- function(filename) {
 }
 ```
 
-```{r read-in-BLAST-data}
+``` r
 # this makes a vector of all the BLAST output file names, including
 # the name(s) of the directories they are in
 files_to_read_in <- list.files(path = "output/blast",
@@ -104,7 +103,7 @@ for (filename in files_to_read_in) {
 }
 ```
 
-```{r read-in-metadata-and-join}
+``` r
 # Next we want to read in the metadata file so we can add that in too
 # This is not a csv file, so we have to use a slightly different syntax
 # here the `sep = "\t"` tells the function that the data are tab-delimited
@@ -125,8 +124,7 @@ joined_blast_data_metadata <- metadata_in %>%
             by = c("Run_s" = "sample_name"))
 ```
 
-
-```{r histograms}
+``` r
 # Here we're using the dplyr piping syntax to select a subset of rows matching a
 # criteria we specify (using the filter) function, and then pull out a column
 # from the data to make a histogram.
@@ -138,9 +136,13 @@ joined_blast_data_metadata %>%
     xlab("Percent")
 ```
 
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+![](Analysis_of_BLAST_Results_files/figure-markdown_github/histograms-1.png)
+
 Don't forget to report what your figures show in words, here in the Results section.
 
-```{r summary-table}
+``` r
 # Finally, we'd like to be able to make a summary table of the counts of
 # sequences for each subject for both sample types. To do that we can use the
 # table() function. We add the kable() function as well (from the tidyr package)
@@ -149,7 +151,20 @@ kable(table(joined_blast_data_metadata$host_subject_id_s,
             joined_blast_data_metadata$sample_type_s))
 ```
 
-# Discussion
+|     |  computer mouse|  right palm|
+|-----|---------------:|-----------:|
+| F2  |             396|         410|
+| F5  |             365|         777|
+| F6  |             662|         422|
+| F7  |             655|         546|
+| F8  |             878|         374|
+| M1  |             456|         878|
+| M2  |             670|         775|
+| M7  |             970|         689|
+| M8  |             717|         280|
+| M9  |             571|         968|
+
+Discussion
+==========
 
 Add 2-3 paragraphs here interpreting your results and considering future directions one might take in analyzing these data.
-
