@@ -1,33 +1,34 @@
-#!/usr/bin/env Rscript
----
-title: "Analysis of BLAST Results "
-author: "Karan Lala"
-date: "October 23, 2018"
-E-mail: "krlala@usfca.edu"
-output: github_document
----
+Analysis of BLAST Results
+================
+Karan Lala
+October 23, 2018
 
-# Introduction
+Introduction
+============
 
 Bacteria are ubiquitous, and the human body is no exception. Humans house huge swathes of bacteria inside and on them. These bacteria play very important roles in human health, especially in areas like the face and gut. The human microbiome project by the NIH provided a lot of information with regards to these microbial communities, including the common species found and sequences as well.
 
 In the Fierer et al study, they attempt to analyse whether communities of microbes found on a persons hands can be matched to the computer mouse they utilised. Skin bacterial communities are personalized, and there is evidence that the interindividual variability among such communities is enough to identify the source. The study shows that microbial communities from such surfaces can be used to distinguish individuals to some degree, even if those objects have been left untouched for up to 2 weeks at room temperature, and hence serve as a method of forensic analysis.
 
-# Methods
+Methods
+=======
 
 Bacterial communities found on individuals fingers were compared with the communities obtained from keys on 3 different keyboards. The samples collected from the surfaces were then comapred with a database of 250 individuals, to macth with the correct individual that had touched the surface in question. Individaulkeys and the fingertip oof the owner were swabbed, and these swabs were stored at -80'C before extracting DNA.
 
-## Sample origin and sequencing
+Sample origin and sequencing
+----------------------------
 
 Samples came from computer keys, mice, and humanhands and fingertips. DNA collected using “MO BIO PowerSoil” DNA Isolation kit, 16S rRNA genes camplified by PCR. PyroSequencing was then carried out by 454 Life Sciences Genome Sequencer FLX instrument and sequences with less than 300 bp are not included.
 
-## Computational
+Computational
+-------------
 
 Further computational steps were used to analyze the data. The data was downloaded from NCBI, and then its quality was assessed by generating QC reports. The Trimmomatic tool was then used to 'trim' sequences, eliminating low quality reads and "N" in the sequence reads. Finally, these trimmed results were converted to the fasta format and then were used to BLAST and find the top matches for the sequences, all using a bash script.
 
-# Results
+Results
+=======
 
-```{r load-libraries, message = FALSE}
+``` r
 # Be sure to install these packages before running this script
 # They can be installed either with the install.packages() function
 # or with the 'Packages' pane in RStudio
@@ -39,7 +40,7 @@ library("knitr")
 library("ggplot2")
 ```
 
-```{r make-read-in-data-function}
+``` r
 # Output format from BLAST is as detailed on:
 # https://www.ncbi.nlm.nih.gov/books/NBK279675/
 # In this case, we used: '10 sscinames std'
@@ -85,7 +86,7 @@ read_blast_output <- function(filename) {
 }
 ```
 
-```{r read-in-BLAST-data}
+``` r
 # this makes a vector of all the BLAST output file names, including
 # the name(s) of the directories they are in
 files_to_read_in <- list.files(path = "output/blast",
@@ -106,7 +107,7 @@ for (filename in files_to_read_in) {
 }
 ```
 
-```{r read-in-metadata-and-join}
+``` r
 # Next we want to read in the metadata file so we can add that in too
 # This is not a csv file, so we have to use a slightly different syntax
 # here the `sep = "\t"` tells the function that the data are tab-delimited
@@ -127,8 +128,7 @@ joined_blast_data_metadata <- metadata_in %>%
             by = c("Run_s" = "sample_name"))
 ```
 
-
-```{r visual data1}
+``` r
 # Here we're using the dplyr piping syntax to select a subset of rows matching a
 # criteria we specify (using the filter) function, and then pull out a column
 # from the data to make a histogram.
@@ -140,8 +140,11 @@ joined_blast_data_metadata %>%
     xlab("host_subject_id_s")
 ```
 
+![](Analysis_of_BLAST_Results_files/figure-markdown_github/visual%20data1-1.png)
+
 Fig 1:This bar plot looks at which samples had the most unidentified bacterium
-```{r visual data2}
+
+``` r
 joined_blast_data_metadata %>%
   filter(sscinames == "Bartonella washoensis" ) %>%
   ggplot(aes(x = host_subject_id_s )) +
@@ -150,11 +153,16 @@ joined_blast_data_metadata %>%
     xlab("host_subject_id_s")
 ```
 
+![](Analysis_of_BLAST_Results_files/figure-markdown_github/visual%20data2-1.png)
+
 Fig 2:This bar plot looks at which samples had the most occurences of *Bartonella washoensis*
 
-## Based off the first two plots, two subject id's were picked to have a closer look at.
+Based off the first two plots, two subject id's were picked to have a closer look at.
+-------------------------------------------------------------------------------------
+
 ### Note that in the below graphs, you cannot distinguish individual species names, which is fine.
-```{r visual data3}
+
+``` r
 joined_blast_data_metadata %>%
   filter(host_subject_id_s == "M2", ) %>%
   ggplot(aes(x = sscinames, y = sample_type_s, color = pident )) +
@@ -162,8 +170,11 @@ joined_blast_data_metadata %>%
     ggtitle("Subject M2")
 ```
 
+![](Analysis_of_BLAST_Results_files/figure-markdown_github/visual%20data3-1.png)
+
 Fig 3: This figure shows the difference in presence of bacterium in the palm and mouse of individual M2
-```{r visual data4}
+
+``` r
 joined_blast_data_metadata %>%
   filter(host_subject_id_s == "F7", ) %>%
   ggplot(aes(x = sscinames, y = sample_type_s, color = pident )) +
@@ -171,20 +182,13 @@ joined_blast_data_metadata %>%
     ggtitle("Subject F7")
 ```
 
+![](Analysis_of_BLAST_Results_files/figure-markdown_github/visual%20data4-1.png)
+
 Fig 4: This figure shows the difference in presence of bacterium in the palm and mouse of individual F7
 
+Discussion
+==========
 
+-   In the data visualizations above, it seems like there aren't a lot of bacterium that were left unidentified, and those that were, existed only in certain samples. Is there something about the environment of those individuals, that they picked up such bacterium? Secondly, we see that *Bartonella washoensis*, which I thought was abundant across all samples after computational analysis with bash, was concentrated in only a few cases.
 
-
-# Discussion
-
-- In the data visualizations above, it seems like there aren't a lot of bacterium that were left unidentified, and those that were, existed only in certain samples. Is there something about the environment of those individuals, that they picked up such bacterium?
-Secondly, we see that *Bartonella washoensis*, which I thought was abundant across all samples after computational analysis with bash, was concentrated in only a few cases.
-
-- After picking two individuals, M2 and F7, which showed presence on both graph, the next two graphs look at the presence of bacteria on the hands and mouse of these individuals.
-Interestingly, for subject M2, we can see that his right palm shows presence of almost all sorts of bacterium identified, while the corresponding mouse is nowhere near as enriched.Perhaps some bacterial species survive better on the mouse, and some simply survive only around organic matter?
-Individual F7 shows more of an expected distribution, with some bacterium specific only to the mouse or hand, some and some common on both surfaces.
-The percent identity distribution doesn't reveal anything special.
-Further, it may be a good idea to compare which bacteria thrive on mouse and human palms across this dataset, and how varied the bacterial community across such comparisons is.
-
-
+-   After picking two individuals, M2 and F7, which showed presence on both graph, the next two graphs look at the presence of bacteria on the hands and mouse of these individuals. Interestingly, for subject M2, we can see that his right palm shows presence of almost all sorts of bacterium identified, while the corresponding mouse is nowhere near as enriched.Perhaps some bacterial species survive better on the mouse, and some simply survive only around organic matter? Individual F7 shows more of an expected distribution, with some bacterium specific only to the mouse or hand, some and some common on both surfaces. The percent identity distribution doesn't reveal anything special. Further, it may be a good idea to compare which bacteria thrive on mouse and human palms across this dataset, and how varied the bacterial community across such comparisons is.
